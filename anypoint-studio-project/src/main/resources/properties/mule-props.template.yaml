@@ -15,35 +15,46 @@ https:
   port: "8082"
 
 #---------------------------------------------------------------------------------------------------
-# SFTP Connector
+# Batch Job Components Configuration
+batch:
+  job:
+    block_size:   "10000"
+  aggregator:
+    main:
+      size:       "1000"
+
+#---------------------------------------------------------------------------------------------------
+# SFTP Connector Configuration
 sftp:
-  host:         ""
-  port:         ""
-  username:     ""
-  password:     ""
-  work_dir:     ""
+  host:           ""
+  port:           ""
+  username:       ""
+  password:       ""
+  working_dir:    ""
+  new_dir:        "new/"
+  processed_dir:  "processed/"
+  failed_dir:     "failed/"
 
 #---------------------------------------------------------------------------------------------------
-# Database Connector
+# Database Connector Configuration
 postgres_db:
-  host:         ""
-  port:         ""
-  url:          "jdbc:postgresql://${postgres_db.host}:${postgres_db.port}/${postgres_db.db_name}"
-  driver_class: "org.postgresql.Driver"
-  username:     ""
-  password:     ""
-  db_name:      ""
+  host:           ""
+  port:           ""
+  url:            "jdbc:postgresql://${postgres_db.host}:${postgres_db.port}/${postgres_db.db_name}"
+  driver_class:   "org.postgresql.Driver"
+  username:       ""
+  password:       ""
+  db_name:        ""
 
 #---------------------------------------------------------------------------------------------------
-# Email Connector
+# Email Connector Configuration
 # Settings for GMail using Application Password - as per https://support.google.com/accounts/answer/185833
 gmail:
   server:
-    host:       "smtp.gmail.com"
-    port:       "465"
-    username:   ""
-    password:   ""
+    host:         "smtp.gmail.com"
+    port:         "465"
+    username:     ""
+    password:     ""
   address:
-    from:       ""
-    to:         ""
-
+    from:         ""
+    to:           ""

@@ -13,12 +13,13 @@ http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/cu
 http://www.mulesoft.org/schema/mule/validation http://www.mulesoft.org/schema/mule/validation/current/mule-validation.xsd
 http://www.mulesoft.org/schema/mule/sftp http://www.mulesoft.org/schema/mule/sftp/current/mule-sftp.xsd">
 	<flow name="contacts-batch-process-flow" doc:id="fca2773d-e6dc-472a-bdaa-089da3c01b12" >
-		<sftp:listener doc:name="On New or Updated File" doc:id="30ea3002-65f1-454e-825e-7b22c93a505d" config-ref="SFTP_Configuration" applyPostActionWhenFailed="false" directory="new/" autoDelete="true" moveToDirectory="processed/" renameTo="#[vars.newFilename]" outputMimeType="application/csv; header=true" recursive="false">
+		<sftp:listener doc:name="On New or Updated File" doc:id="30ea3002-65f1-454e-825e-7b22c93a505d" config-ref="SFTP_Configuration" applyPostActionWhenFailed="false" directory="${sftp.new_dir}" autoDelete="true" moveToDirectory="${sftp.processed_dir}" renameTo="#[vars.newFilename]" outputMimeType="application/csv; header=true" recursive="false">
 			<scheduling-strategy >
-				<fixed-frequency frequency="1" timeUnit="MINUTES"/>
+				<fixed-frequency/>
 			</scheduling-strategy>
 		</sftp:listener>
 		<logger level="TRACE" doc:name="Trace - Flow Starting" doc:id="cc1035dd-eb22-48c5-9e80-27b1df5ca614" message="Flow starting"/>
+		<logger level="TRACE" doc:name="Trace - Batch Configurations" doc:id="6a9d88c4-526b-49cd-bae0-9a1a14f83bcc" message='#["Batch configurations - Batch block size: " ++ p("batch.job.block_size") ++ " - Main aggregator size: " ++ p("batch.aggregator.main.size")]'/>
 		<flow-ref doc:name="initialization-flow" doc:id="232f0e9b-eafb-488e-bbd6-cd967f9a174a" name="initialization-flow"/>
 		<logger level="TRACE" doc:name="Trace - Transforming Data" doc:id="dfa0c19b-a6e0-42fa-83fe-99673e16b161" message="Transforming input data to Java" />
 		<ee:transform doc:name="CSV to Java" doc:id="4d5aad3b-8cbd-4166-b9de-02c808ddf3ab">
@@ -30,10 +31,10 @@ payload as Iterator]]></ee:set-payload>
 			</ee:message>
 		</ee:transform>
 		<logger level="TRACE" doc:name="Trace - Staging Batch Job" doc:id="62f88264-e34a-4cfc-971c-66ff286b8e48" message="Staging Batch Job" />
-		<batch:job jobName="file-processing-job" doc:id="5f305767-0e1f-4eb4-9dd5-a085a7fe704f" maxFailedRecords="-1" blockSize="10000">
+		<batch:job jobName="file-processing-job" doc:id="5f305767-0e1f-4eb4-9dd5-a085a7fe704f" maxFailedRecords="-1" blockSize="${batch.job.block_size}">
 			<batch:process-records >
 				<batch:step name="main-processing-step" doc:id="4b0247b5-3ae7-4d8a-82e4-f323c3011eb8" >
-					<batch:aggregator doc:name="main-records-aggregator" doc:id="49515385-4c84-48c1-b078-adf0532b2685" size="1000" preserveMimeTypes="true" >
+					<batch:aggregator doc:name="main-records-aggregator" doc:id="49515385-4c84-48c1-b078-adf0532b2685" size="${batch.aggregator.main.size}" preserveMimeTypes="true" >
 						<ee:transform doc:name="CSV to SQL" doc:id="d458f945-6ae4-4694-b7c5-7a0ffc42dc1a">
 						<ee:message>
 							<ee:set-payload><![CDATA[%dw 2.0
@@ -105,7 +106,7 @@ VALUES (:account_id, :active_tracker_count, :assistant_name, :assistant_phone, :
 				<batch:step name="failed-records-processing-step" doc:id="bf6dcd43-b733-4430-bba0-7c87e6ce5e75" acceptPolicy="ONLY_FAILURES" >
 					<batch:aggregator doc:name="failed-records-aggregator" doc:id="ed8bce38-4287-4917-abab-b032ccdbf55f" preserveMimeTypes="true" streaming="true">
 						<logger level="TRACE" doc:name="Trace - Writing Errors to File" doc:id="7917748a-0c4b-4e92-b3e5-d825d0099541" message="Writing errors/failed records to file" />
-						<sftp:write doc:name="Error Records" doc:id="e2aeb552-2049-48e6-b092-21ed9eceb1e0" config-ref="SFTP_Configuration" createParentDirectories="false" path='#["processed/" ++ vars.errorsFilename]'>
+						<sftp:write doc:name="Error Records" doc:id="e2aeb552-2049-48e6-b092-21ed9eceb1e0" config-ref="SFTP_Configuration" createParentDirectories="false" path='#[p("sftp.processed_dir") ++ vars.errorsFilename]'>
 							<sftp:content ><![CDATA[#[output application/json --- payload]]]></sftp:content>
 						</sftp:write>
 					</batch:aggregator>
@@ -135,7 +136,7 @@ output application/json
 		<error-handler >
 			<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="451210c0-5f22-4392-bd49-8f15855a1a4e" type="ANY">
 				<logger level="ERROR" doc:name="ERROR - Failed Processing File" doc:id="e7a416ab-35f5-492c-a863-f02c074f822e" message='Failed processing file #[vars.currentFilename]' />
-				<sftp:move doc:name="File to Failed Directory" doc:id="3318a5b5-aab1-431f-8929-99bd8a88e90c" config-ref="SFTP_Configuration" sourcePath='#["new/" ++ vars.currentFilename]' targetPath='#["failed/"]' createParentDirectories="false"/>
+				<sftp:move doc:name="File to Failed Directory" doc:id="3318a5b5-aab1-431f-8929-99bd8a88e90c" config-ref="SFTP_Configuration" sourcePath='#[p("sftp.new_dir") ++ vars.currentFilename]' targetPath='#[p("sftp.failed_dir")]' createParentDirectories="false"/>
 			</on-error-propagate>
 		</error-handler>
 	</flow>

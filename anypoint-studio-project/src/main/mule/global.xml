@@ -16,7 +16,7 @@ http://www.mulesoft.org/schema/mule/email http://www.mulesoft.org/schema/mule/em
 	<global-property doc:name="Global Property" doc:id="e25b8137-ba5f-4210-b8de-a11eec6654b0" name="env" value="dev" />
 	<configuration-properties doc:name="Configuration properties" doc:id="ddbec9cc-c5e6-4fd9-9563-011e62d7c7b5" file="properties/mule-props-${env}.yaml" />
 	<sftp:config name="SFTP_Configuration" doc:name="SFTP Config" doc:id="bde78048-30ef-481f-a1f7-44f81300a059">
-		<sftp:connection host="${sftp.host}" port="${sftp.port}" username="${sftp.username}" password="${sftp.password}" workingDir="${sftp.work_dir}"/>
+		<sftp:connection host="${sftp.host}" port="${sftp.port}" username="${sftp.username}" password="${sftp.password}" workingDir="${sftp.working_dir}"/>
 	</sftp:config>
 	<validation:config name="Validation_Config" doc:name="Validation Config" doc:id="ff5b5393-f058-4f57-9dce-e94c41a70639" />
 	<db:config name="Postgres_Database_Config" doc:name="Database Config" doc:id="27a8f0a4-bfd6-4a90-8030-870495659ae8" >
