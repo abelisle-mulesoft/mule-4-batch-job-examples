@@ -1,6 +1,9 @@
 # Mule 4 Batch Job Examples
 
-As of this writing, this repository contains a single Mule application I created to explain and demonstrate how to implement a batch job in Mule 4. I did not implement it to address a specific use case but to serve as a comprehensive example that illustrates the art of the possible. There are many examples across the web and in blog posts. Nevertheless, I am sharing this example as it is more comprehensive than most, if not all. Note that I plan to add another example soon.
+As of this writing, this repository contains a single Mule application I created to explain and demonstrate how to implement a batch job in Mule 4. I did not implement it to address a specific use case but to serve as a comprehensive example that illustrates the art of the possible. There are many examples across the web and in blog posts. Nevertheless, I am sharing this example as it is more comprehensive than most, if not all. 
+
+> [!NOTE]
+> I plan to add another example soon.
 
 ## Contacts CSV File to Database Example
 
