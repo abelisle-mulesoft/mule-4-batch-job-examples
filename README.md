@@ -7,8 +7,8 @@ As of this writing, this repository contains a single Batch Job example, the Con
 
 ## Repository Content
 
-- The folder **anypoint-studio-projects** includes the source code of the Mule application.
-- The folder **documentation** contains an [Overview](documentation/Overview.md) document, which provides additional details on the Mule application and its implementation.
+- The folder **anypoint-studio-projects** includes the source code of the Mule application. Each project subdirectory includes a README file that provides details on the Mule application it contains and its implementation.
+- The folder **documentation** is currently a temporary placeholder.
 - The folder **resources** includes miscellaneous resources for setting up the environment - e.g., sample contact data, script for setting up the database. This folder contains a [README](resources/_README.md) file that provides additional details.
 
 ## Technology Stack Overview
