@@ -1,8 +1,8 @@
 #===================================================================================================
-# Mule Application Properties
+# Mule Application Properties Template
 #===================================================================================================
 env:
-  name: "dev"
+  name: ""
 
 #---------------------------------------------------------------------------------------------------
 # HTTP Listener on CloudHub
@@ -48,7 +48,7 @@ postgres_db:
 
 #---------------------------------------------------------------------------------------------------
 # Email Connector Configuration
-# Settings for GMail using Application Password - as per https://support.google.com/accounts/answer/185833
+# Settings for Gmail using Application Password - as per https://support.google.com/accounts/answer/185833
 gmail:
   server:
     host:         "smtp.gmail.com"
