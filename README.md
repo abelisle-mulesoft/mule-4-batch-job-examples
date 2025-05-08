@@ -1,17 +1,9 @@
 # Mule 4 Batch Job Examples
 
-As of this writing, this repository contains a single Mule application I created to explain and demonstrate how to implement a batch job in Mule 4. I did not implement it to address a specific use case but to serve as a comprehensive example that illustrates the art of the possible. There are many examples across the web and in blog posts. Nevertheless, I am sharing this example as it is more comprehensive than most, if not all. 
+As of this writing, this repository contains a single Batch Job example, the Contacts CSV File to Database example. I created this Mule application to explain and demonstrate how to implement a batch job in Mule 4. My goal was not to implement it to address a specific use case but to serve as a comprehensive example that illustrates the art of the possible. There are many examples across the web and in blog posts. Nevertheless, I am sharing this example as it is more comprehensive than most, if not all.  
 
 > [!NOTE]
 > I plan to add another example soon.
-
-## Contacts CSV File to Database Example
-
-As implied, the Contacts CSV File to Database Example reads contact data from a CSV file and inserts it into a database. Furthermore, it sends a summary report upon completion via email. 
-
-![Contacts CSV File to Database Overview](documentation/assets/images/01-Introduction.png)
-
-As the diagram illustrates, I upload my contact data to an SFTP server and leverage a PostgreSQL database and Gmail. Naturally, you could change those as needed to meet your demo requirements.
 
 ## Repository Content
 
