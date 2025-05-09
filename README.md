@@ -9,7 +9,7 @@ As of this writing, this repository contains a single Batch Job example, the Con
 
 - The folder **anypoint-studio-projects/batch-contacts-csv-to-db** includes the source code of the Mule application `batch-contacts-csv-to-db`. 
 - The folder **documentation** contains an [Overview](documentation/Overview.md) document, which provides additional details on the Mule application `batch-contacts-csv-to-db` and its implementation.
-- The folder **resources** includes miscellaneous resources for setting up the environment - e.g., sample contact data, script for setting up the database. This folder contains a [README](resources/_README.md) file that provides additional details.
+- The folder **resources** includes miscellaneous resources for setting up the environment - e.g., sample contact data, script for setting up the database. This folder contains a [README](resources/README.md) file that provides additional details.
 
 ## Technology Stack Overview
 
