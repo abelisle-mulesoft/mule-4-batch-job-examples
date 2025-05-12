@@ -1,6 +1,6 @@
-# Mule Project `batch-contacts-csv-to-db`
+# Mule Project `batch-contacts-csv-to-db` Overview
 
-I initially created the Mule project `batch-contacts-csv-to-db` in October 2022 as part of a proof of concept to process millions of records using Mule 4. The high-level requirements included reading a CSV file and inserting the data into a database. Over the past few years, I have evolved it to explain and demonstrate how to implement a batch job in Mule 4. In this revision, my goal was not to implement a particular use case but to serve as a comprehensive example that illustrates the art of the possible.
+I originally created the Mule project `batch-contacts-csv-to-db` in October 2022 as part of a proof of concept to process millions of records using Mule 4. The high-level requirements included reading a CSV file and inserting the data into a database. Over the past few years, I have evolved it to explain and demonstrate how to implement a batch job in Mule 4. In this revision, my goal was not to implement a particular use case but to serve as a comprehensive example that illustrates the art of the possible.
 
 ![Contacts CSV File to Database Introduction](assets/images/CSV-To-DB-01-Introduction.png)
 
