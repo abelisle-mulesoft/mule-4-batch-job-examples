@@ -74,4 +74,4 @@ As discussed in the [Overview](Overview.md) document, the Mule project `batch-co
           - `sftp.processed_dir` - The subdirectory within the `sftp.working_dir` where the error handler moves files if an error or failure occurs (e.g., `processed`).
 
 4. Compile and run the project in Anypoint Studio as a smoke test. 
-    - Optionally, upload the sample file [Contact_Data_100.csv](../resources/Contact_Data_100.csv) to your SFTP server within the `new` subdirectory to test and validate your configuration. As a reminder, the Mule application `batch-contacts-csv-to-db` sends a summary report via Gmail upon completion of the batch job. In other words, your configuration and settings are valid if you receive the summary email report.
+    - Optionally, upload the sample file [Contact_Data_100.csv](/resources/Contact_Data_100.csv) to your SFTP server within the `new` subdirectory to test and validate your configuration. As a reminder, the Mule application `batch-contacts-csv-to-db` sends a summary report via Gmail upon completion of the batch job. In other words, your configuration and settings are valid if you receive the summary email report.
