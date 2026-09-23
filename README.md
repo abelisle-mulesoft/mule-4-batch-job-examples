@@ -1,26 +1,18 @@
 # Mule 4 Batch Job Examples
 
-As of this writing, this repository contains a single Batch Job example, the `batch-contacts-csv-to-db` example. I created this Mule application to explain and demonstrate how to implement a batch job in Mule 4. My goal was not to implement it to address a specific use case but to serve as a comprehensive example that illustrates the art of the possible. There are many examples across the web and in blog posts. Nevertheless, I am sharing this example as it is more comprehensive than most, if not all.  
+This repository contains examples that demonstrate how to implement batch processing in Mule 4.
 
-> [!NOTE]
-> I plan to add another example soon.
+- The `batch-contacts-csv-to-db` example demonstrates a comprehensive batch job implementation that processes contact data from CSV files and persists the records to a database. The example is intended to illustrate Mule batch processing capabilities rather than address a specific business use case.
 
 ## Repository Content
 
-- The folder **anypoint-studio-projects/batch-contacts-csv-to-db** includes the source code of the Mule application `batch-contacts-csv-to-db` and documentation to getting you started.
-- The folder **resources** includes miscellaneous resources for setting up the environment - e.g., sample contact data, script for setting up the database. This folder contains a [README](resources/README.md) file that provides additional details.
+- **[batch-contacts-csv-to-db](batch-contacts-csv-to-db/)** — Contains the Mule application source code, documentation, sample data, and supporting resources for the `batch-contacts-csv-to-db` example.
 
-## Technology Stack Overview
+## Technology Stack
 
-The assets and resources in this repository were implemented and tested using the following technology stack:
+The example was implemented and tested using the following technology stack:
 
-- MuleSoft Anypoint Studio 7.18
-- Mule runtime 4.7.0
+- MuleSoft Anypoint Studio 7.26
+- Mule runtime 4.12.0
 - PostgreSQL 11.9
 - PostgreSQL JDBC Driver 42.7.5
-
-Although not formally tested, you could easily use older or newer versions.
-
-## Reporting Issues
-
-You can report new issues at this link https://github.com/abelisle-mulesoft/mule-4-batch-job-examples/issues.
