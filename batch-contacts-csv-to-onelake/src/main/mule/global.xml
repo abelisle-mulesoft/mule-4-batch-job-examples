@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mule xmlns:azure-data-lake-storage="http://www.mulesoft.org/schema/mule/azure-data-lake-storage"
+	xmlns:secure-properties="http://www.mulesoft.org/schema/mule/secure-properties"
+	xmlns:sftp="http://www.mulesoft.org/schema/mule/sftp"
+	xmlns:validation="http://www.mulesoft.org/schema/mule/validation"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="
+http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/sftp http://www.mulesoft.org/schema/mule/sftp/current/mule-sftp.xsd
+http://www.mulesoft.org/schema/mule/validation http://www.mulesoft.org/schema/mule/validation/current/mule-validation.xsd
+http://www.mulesoft.org/schema/mule/secure-properties http://www.mulesoft.org/schema/mule/secure-properties/current/mule-secure-properties.xsd
+http://www.mulesoft.org/schema/mule/azure-data-lake-storage http://www.mulesoft.org/schema/mule/azure-data-lake-storage/current/mule-azure-data-lake-storage.xsd">
+	<global-property doc:name="Global Property" name="env" value="dev" />
+	<global-property doc:name="Global Property" name="SECURE_PROPERTIES_KEY" value="PLACEHOLDER_ONLY__OVERRIDE_AT_RUNTIME" />
+	<configuration-properties doc:name="Configuration properties" file="properties/app-props-${env}.yaml" />
+	<secure-properties:config name="Secure_Properties_Config" doc:name="Secure Properties Config" file="properties/secure-props-${env}.yaml" key="${SECURE_PROPERTIES_KEY}" />
+	<sftp:config name="SFTP_Config" doc:name="SFTP Config" doc:id="5e627cbb-1bdb-48af-9bc6-4413782d85a2">
+		<sftp:connection host="${sftp.host}" port="${sftp.port}" username="${sftp.username}" password="${secure::sftp.password}" workingDir="${sftp.working_dir}" idleTimeout="300"/>
+	</sftp:config>
+	<azure-data-lake-storage:config name="Azure_Data_Lake_Storage_Config" doc:name="Azure Data Lake Storage Config" doc:id="b5976253-0005-45c1-9db5-61073e79adad" >
+		<azure-data-lake-storage:oauth-2-0-connection baseUri="https://onelake.dfs.fabric.microsoft.com" >
+			<azure-data-lake-storage:oauth-client-credentials clientId="${secure::azure.client_id}" clientSecret="${secure::azure.client_secret}" tokenUrl="https://login.microsoftonline.com/${secure::azure.tenant_id}/oauth2/v2.0/token" />
+		</azure-data-lake-storage:oauth-2-0-connection>
+	</azure-data-lake-storage:config>
+	<validation:config name="Validation_Config" doc:name="Validation Config" doc:id="94d2924c-df92-486d-bce7-1749054b5063" />
+</mule>

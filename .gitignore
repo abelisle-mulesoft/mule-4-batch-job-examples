@@ -44,7 +44,9 @@ buildNumber.properties
 # --------------------------------------
 # Environment Configuration
 # --------------------------------------
+app-props-*.yaml
 mule-props-*.yaml
+secure-props-*.yaml
 
 # --------------------------------------
 # Certificates / Keystores

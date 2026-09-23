@@ -1,0 +1,4 @@
+%dw 2.0
+
+type auto_d6292501_2564_4cab_b109_183ae90a4c8b_Output_Variables_currentFilename = Any
+

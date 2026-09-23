@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mule xmlns:validation="http://www.mulesoft.org/schema/mule/validation"
+	xmlns:azure-data-lake-storage="http://www.mulesoft.org/schema/mule/azure-data-lake-storage"
+	xmlns:batch="http://www.mulesoft.org/schema/mule/batch"
+	xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns:sftp="http://www.mulesoft.org/schema/mule/sftp"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="
+http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/sftp http://www.mulesoft.org/schema/mule/sftp/current/mule-sftp.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
+http://www.mulesoft.org/schema/mule/batch http://www.mulesoft.org/schema/mule/batch/current/mule-batch.xsd
+http://www.mulesoft.org/schema/mule/azure-data-lake-storage http://www.mulesoft.org/schema/mule/azure-data-lake-storage/current/mule-azure-data-lake-storage.xsd
+http://www.mulesoft.org/schema/mule/validation http://www.mulesoft.org/schema/mule/validation/current/mule-validation.xsd">
+	<flow name="process-file-flow" doc:id="9067152c-22c8-4c6d-9a55-eeb4220d868b" >
+		<sftp:listener doc:name="On New or Updated File" doc:id="142fa219-22a5-41b6-a031-315bb1e0faf6" config-ref="SFTP_Config" directory="${sftp.new_dir}" recursive="false" autoDelete="true" moveToDirectory="${sftp.archive_dir}" renameTo="#[vars.archivedFilename]" applyPostActionWhenFailed="false" timeBetweenSizeCheck="2" timeBetweenSizeCheckUnit="SECONDS">
+			<scheduling-strategy >
+				<fixed-frequency frequency="5" timeUnit="SECONDS"/>
+			</scheduling-strategy>
+			<sftp:matcher filenamePattern="*.csv" />
+		</sftp:listener>
+		<logger level="TRACE" doc:name="TRACE - Flow Starting" doc:id="9320ac0e-4896-4a67-a3b3-ca4fded89b09" message="Flow starting"/>
+		<logger level="TRACE" doc:name="TRACE - Batch Configurations" doc:id="32bee64d-a076-402c-8f1b-65fab5b3e6d4" message='#["Batch configurations - Batch block size: " ++ p("batch.job.block_size") ++ " - Main aggregator size: " ++ p("batch.aggregator.main.size")]' />
+		<flow-ref doc:name="initialization-flow" doc:id="56a307ea-19d2-47b7-80b3-77a5a5b1fa22" name="initialization-flow" />
+		<logger level="INFO" doc:name="INFO - File Received" doc:id="2e18e8d9-7ab4-4a32-b71c-5b21b851d586" message='#[output application/json&#10;---&#10;{&#10;  event: "FILE_RECEIVED",&#10;  sourceFile: vars.sourceFilename,&#10;  fileSize: vars.sourceFileSize  &#10;}]' />
+		<logger level="TRACE" doc:name="TRACE - Staging Batch Job" doc:id="6c6d147e-86ae-420c-adee-627be35f72bd" message="Staging Batch Job" />
+		<batch:job jobName="file-processing-job" doc:id="f7c01c1a-ed27-438c-bae9-3832a84bf126" maxFailedRecords="-1" blockSize="${batch.job.block_size}" >
+			<batch:process-records >
+				<batch:step name="main-processing-step" doc:id="d1a6ff0a-6392-4877-bf4c-21f9650c46c4" >
+					<batch:aggregator doc:name="main-records-aggregator" doc:id="7edbf416-c23c-4f61-82ac-b61c35691540" preserveMimeTypes="true" streaming="true">
+						<ee:transform doc:name="Prepare Staged CSV" doc:id="e500a24b-e7c3-433a-bee5-4d1aeeb8aaa9" >
+							<ee:message >
+								<ee:set-payload ><![CDATA[%dw 2.0
+output application/csv header=true
+---
+flatten(payload)]]></ee:set-payload>
+							</ee:message>
+						</ee:transform>
+						<sftp:write doc:name="Processed Data to Staged File" doc:id="d8c48c87-577f-48e2-a7be-6c2cf03852e7" config-ref="SFTP_Config" path="#[p('sftp.staged_dir') ++ vars.stagedFilename]" mode="APPEND" createParentDirectories="false"/>
+					</batch:aggregator>
+					<validation:is-email doc:name="Is email" doc:id="990f2dbc-40fa-4902-b318-3164d6f2d3c7" config-ref="Validation_Config" email="#[payload[0].email]"/>
+				</batch:step>
+				<batch:step name="failed-records-processing-step" doc:id="34604a4e-5ac7-4dc1-bb19-388f39826834" acceptPolicy="ONLY_FAILURES" >
+					<ee:transform doc:name="Create Error Record" doc:id="bb102343-7954-4b9d-8090-573801e06e36" >
+						<ee:message >
+							<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+    error: Batch::getFirstException().message,
+    record: payload[0]
+}]]></ee:set-payload>
+						</ee:message>
+					</ee:transform>
+					<batch:aggregator doc:name="failed-records-aggregator" doc:id="6cdeffaf-b63d-4903-a5a1-f754810c2f4d" streaming="true" preserveMimeTypes="true" >
+						<sftp:write doc:name="Error Records" doc:id="f113f4e4-8ad0-411b-80f8-285d61ebf234" config-ref="SFTP_Config" path='#[p("sftp.archive_dir") ++ vars.errorsFilename]' createParentDirectories="false" mode="APPEND">
+							<sftp:content ><![CDATA[#[output application/json --- payload]]]></sftp:content>
+						</sftp:write>
+						<logger level="WARN" doc:name="WARN - Failed Records Written" doc:id="22c1a790-ff28-4b18-92fd-68db8fe996ac" message='#[output application/json&#10;---&#10;{&#10;  event: "FAILED_RECORDS_WRITTEN",&#10;  sourceFile: vars.sourceFilename,&#10;  errorFile: vars.errorsFilename,&#10;  recordCount: sizeOf(payload)&#10;}]' />
+					</batch:aggregator>
+				</batch:step>
+			</batch:process-records>
+			<batch:on-complete >
+				<set-variable value="#[payload]" doc:name="batchJobResult" doc:id="20920269-cf5b-4107-8dd0-fd8bba60ff00" variableName="batchJobResult"/>
+				<logger level="INFO" doc:name="INFO - Batch Processing Completed" doc:id="f14e1dcf-034e-44c7-b829-11e56d456503" message='#[output application/json&#10;---&#10;{&#10;  event: "BATCH_PROCESSING_COMPLETED",&#10;  totalRecords: vars.batchJobResult.totalRecords,&#10;  successfulRecords: vars.batchJobResult.successfulRecords,&#10;  failedRecords: vars.batchJobResult.failedRecords,&#10;  elapsedTimeInMillis: vars.batchJobResult.elapsedTimeInMillis&#10;}]' />
+				<sftp:read doc:name="Staged File" doc:id="2b0eaf04-99ee-43e6-86ed-7f65e3970519" config-ref="SFTP_Config" path="#[p('sftp.staged_dir') ++ vars.stagedFilename]" />
+				<set-variable value="#[attributes.size]" doc:name="stagedFileSize" doc:id="4632e4cc-a631-4f65-bf22-fb58055a019d" variableName="stagedFileSize" />
+				<logger level="INFO" doc:name="INFO - Staged File Ready for Delivery" doc:id="0433928f-3cad-4974-b7b3-dd69c995b5bf" message='#[output application/json&#10;---&#10;{&#10;  event: "STAGED_FILE_READY_FOR_DELIVERY",&#10;  stagedFile: vars.stagedFilename,&#10;  fileSize: vars.stagedFileSize&#10;}]'/>
+				<flow-ref doc:name="deliver-file-to-onelake-flow" doc:id="11b7b5e2-534f-49b4-a91b-fde9e5d85ba8" name="deliver-file-to-onelake-flow"/>
+				<logger level="INFO" doc:name="INFO - File Audit" doc:id="0c664198-a699-440a-ac2e-1ae18135c48a" message="#[output application/json&#10;---&#10;{&#10;  event: &quot;FILE_AUDIT&quot;,&#10;  sourceFile: vars.sourceFilename,&#10;  targetEndpoint: p('onelake.base_path'),&#10;  targetFile: vars.oneLakeFilename,&#10;  outcome: &quot;SUCCESS&quot;&#10;}]"/>
+				<sftp:move doc:name="Staged File to Processed Directory" doc:id="85af0068-be2a-459a-8ab1-079bfda6c62a" config-ref="SFTP_Config" sourcePath="#[p('sftp.staged_dir') ++ vars.stagedFilename]" targetPath="#[p('sftp.archive_dir')]" createParentDirectories="false" />
+				<logger level="INFO" doc:name="INFO - Staged File Archived" doc:id="c90f5423-0cdc-42aa-876a-85c77ae90cab" message='#[output application/json&#10;---&#10;{&#10;  event: "STAGED_FILE_ARCHIVED",&#10;  stagedFile: vars.stagedFilename&#10;}]'/>
+				<logger level="INFO" doc:name="INFO - File Processing Completed" doc:id="f0a30d77-383f-45de-ae75-d81311e7d8cd" message='#[output application/json&#10;---&#10;{&#10;  event: "FILE_PROCESSING_COMPLETED",&#10;  sourceFile: vars.sourceFilename,&#10;  elapsedTimeInMillis: dw::util::Timer::currentMilliseconds() - vars.startTime&#10;}]' />
+			</batch:on-complete>
+		</batch:job>
+		<logger level="TRACE" doc:name="TRACE - Batch Job Started" doc:id="e8a1482d-1d17-4097-a190-020711ff963a" message="Batch job successfully started" />
+		<logger level="TRACE" doc:name="TRACE - Flow Ending" doc:id="5e527a70-edda-4132-b608-0ee87189ab09" message="Flow ending" />
+		<error-handler >
+			<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="99226e9c-99b9-4b89-9996-95fefde173f2" type="ANY">
+				<logger level="ERROR" doc:name="ERROR - Failed Processing File" doc:id="1a9c9368-8153-4970-b2c8-32ce479c192a" message='#[output application/json&#10;---&#10;{&#10;  event: "FILE_PROCESSING_FAILED",&#10;  sourceFile: vars.sourceFilename,&#10;  error: error.description&#10;}]' />
+				<logger level="ERROR" doc:name="ERROR - File Audit" doc:id="9cb3e26d-ed78-4061-aca4-8a978208db75" message="#[output application/json&#10;---&#10;{&#10;  event: &quot;FILE_AUDIT&quot;,&#10;  sourceFile: vars.sourceFilename,&#10;  targetEndpoint: p('onelake.base_path'),&#10;  targetFile: vars.oneLakeFilename default null,&#10;  outcome: &quot;FAILED&quot;&#10;}]"/>
+				<sftp:move doc:name="File to Failed Directory" doc:id="edd5eb2f-c108-4871-8388-5bf9d9c70e7a" config-ref="SFTP_Config" sourcePath="#[p('sftp.new_dir') ++ vars.sourceFilename]" targetPath="#[p('sftp.failed_dir')]" createParentDirectories="false" />
+			</on-error-propagate>
+		</error-handler>
+	</flow>
+	<flow name="initialization-flow" doc:id="d6292501-2564-4cab-b109-183ae90a4c8b" >
+		<set-variable value="#[dw::util::Timer::currentMilliseconds()]" doc:name="startTime" doc:id="21bc4195-84fd-4917-a8a5-3fa9bd0deb6c" variableName="startTime" />
+		<set-variable value='#[attributes.fileName default "unknown.csv"]' doc:name="sourceFilename" doc:id="f671473f-1162-45b4-b8bf-960f2f03cb6f" variableName="sourceFilename" />
+		<set-variable value='#[import * from dw::core::Strings --- substringAfterLast(vars.sourceFilename, ".")]' doc:name="sourceExtension" doc:id="4c6d7295-458d-47bd-8082-81e82db69629" variableName="sourceExtension" />
+		<set-variable value="#[attributes.size]" doc:name="sourceFileSize" doc:id="40a0f638-ff92-4f9e-9987-ef2d3522c918" variableName="sourceFileSize"/>
+		<set-variable value='#[import * from dw::core::Strings --- substringBeforeLast(vars.sourceFilename, ".")]' doc:name="baseFilename" doc:id="78b5ebc5-8d09-4a7c-9ed9-fe6c2b08e64f" variableName="baseFilename"/>
+		<set-variable value='#[vars.baseFilename ++ "." ++ correlationId ++ ".source." ++ vars.sourceExtension]' doc:name="archivedFilename" doc:id="9edfbce4-a03d-42f3-9a19-592e1e6d5f6f" variableName="archivedFilename" />
+		<set-variable value='#[vars.baseFilename ++ "." ++ correlationId ++ ".errors.json"]' doc:name="errorsFilename" doc:id="2fabcf02-6015-403b-9dc0-b69306210a41" variableName="errorsFilename" />
+		<set-variable value='#[vars.baseFilename ++ "." ++ correlationId ++ "." ++ vars.sourceExtension]' doc:name="oneLakeFilename" doc:id="9bcf2466-748d-4bb8-894c-5b9f884caccc" variableName="oneLakeFilename" />
+		<set-variable value='#[vars.baseFilename ++ "." ++ correlationId ++ ".staged." ++ vars.sourceExtension]' doc:name="stagedFilename" doc:id="4f970013-5b2f-4d90-89e1-d2b24488c8c2" variableName="stagedFilename" />
+	</flow>
+	<flow name="deliver-file-to-onelake-flow" doc:id="84a41a90-d7a5-4095-b7a5-d95705a6c0ef" >
+		<logger level="INFO" doc:name="INFO - OneLake Upload Started" doc:id="78e6f8c1-c8fc-471e-9619-3215fc8ffecb" message='#[output application/json&#10;---&#10;{&#10;  event: "ONELAKE_UPLOAD_STARTED",&#10;  oneLakeFile: vars.oneLakeFilename,&#10;  fileSize: vars.stagedFileSize&#10;}]' />
+		<logger level="TRACE" doc:name="TRACE - Creating OneLake File" doc:id="0db33c63-c560-46e2-8260-bb54c01733bc" message="Creating OneLake file"/>
+		<azure-data-lake-storage:create-or-rename doc:name="Create OneLake File" doc:id="a083f7a5-5e88-4e78-b6b5-7bc4bb51e81c" config-ref="Azure_Data_Lake_Storage_Config" resource="file" fileSystem="#[p('onelake.workspace')]" path="#[p('onelake.base_path') ++ vars.oneLakeFilename]" target="createPathResult" />
+		<logger level="TRACE" doc:name="TRACE - Appending OneLake File Content" doc:id="e25c330e-d2d3-40fd-8f2c-0c9ec0bf49cc" message="Appending OneLake file content"/>
+		<azure-data-lake-storage:update-path action="append" contentLength="#[vars.stagedFileSize]" doc:name="Append File Content" doc:id="64f49eb5-cde5-4036-8066-7dcf03e27931" config-ref="Azure_Data_Lake_Storage_Config" fileSystem="#[p('onelake.workspace')]" path="#[p('onelake.base_path') ++ vars.oneLakeFilename]" />
+		<logger level="TRACE" doc:name="TRACE - Flushing OneLake File" doc:id="89750e67-0233-4217-bd68-2bbb2b8deb73" message="Flushing OneLake file"/>
+		<azure-data-lake-storage:update-path action="flush" contentLength="#[0]" doc:name="Flush OneLake File" doc:id="4dc7a916-e864-4097-ad23-bba28237e5db" config-ref="Azure_Data_Lake_Storage_Config" fileSystem="#[p('onelake.workspace')]" path="#[p('onelake.base_path') ++ vars.oneLakeFilename]" position="#[vars.stagedFileSize]" />
+		<logger level="INFO" doc:name="INFO - OneLake Upload Completed" doc:id="ae31b34e-ff26-426a-a255-6c841a98f183" message='#[output application/json&#10;---&#10;{&#10;  event: "ONELAKE_UPLOAD_COMPLETED",&#10;  oneLakeFile: vars.oneLakeFilename,&#10;  fileSize: vars.stagedFileSize&#10;}]'/>
+	</flow>
+</mule>
