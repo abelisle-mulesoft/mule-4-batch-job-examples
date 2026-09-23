@@ -87,7 +87,7 @@ Running the Mule project with the existing implementation requires the following
 
 4. Compile and run the project in Anypoint Studio as a smoke test.
 
-   The sample file [Contact_Data_100.csv](../resources/Contact_Data_100.csv) can optionally be uploaded to the `new` subdirectory on the SFTP server to validate the configuration. Upon completion of the Batch Job, the Mule application sends a summary report via Gmail. Successful processing of the sample file and receipt of the summary report provide confirmation that the required configuration is functioning as expected.
+   The sample file [contact-data-100.csv](../resources/contact-data-100.csv) can optionally be uploaded to the `new` subdirectory on the SFTP server to validate the configuration. Upon completion of the Batch Job, the Mule application sends a summary report via Gmail. Successful processing of the sample file and receipt of the summary report provide confirmation that the required configuration is functioning as expected.
 
 ---
 
