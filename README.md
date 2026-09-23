@@ -16,3 +16,7 @@ The example was implemented and tested using the following technology stack:
 - Mule runtime 4.12.0
 - PostgreSQL 11.9
 - PostgreSQL JDBC Driver 42.7.5
+
+---
+
+Copyright © 2026 Alan Belisle. Licensed under the [Apache License 2.0](LICENSE).
