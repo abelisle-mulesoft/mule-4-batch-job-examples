@@ -147,6 +147,9 @@ Finally, review the `On Complete` section of the Batch Job component.
 
   - As mentioned, I send a summary report via Gmail. The following is an example.
 
-  
+
   ![Summary Report Example](assets/images/CSV-To-DB-18-Summary-Report-Example.png)
 
+---
+
+Copyright © 2026 Alan Belisle. Licensed under the [Apache License 2.0](/LICENSE).

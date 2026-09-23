@@ -9,9 +9,9 @@ As discussed in the [Overview](Overview.md) document, the Mule project `batch-co
    - Port number.
    - Username.
    - Password.
-   - Working directory, which is the default path on the SFTP server where we typically create the following subdirectories: 
+   - Working directory, which is the default path on the SFTP server where we typically create the following subdirectories:
      - `new`, which is the subdirectory that the Mule application `batch-contacts-csv-to-db` monitors for new and updated files using the SFTP Connector.
-     - `processed`, which is the subdirectory where the Mule application `batch-contacts-csv-to-db` moves files once they are processed. It also writes errors that occurred in the Batch Job to another file in this subdirectory. 
+     - `processed`, which is the subdirectory where the Mule application `batch-contacts-csv-to-db` moves files once they are processed. It also writes errors that occurred in the Batch Job to another file in this subdirectory.
      - `failed`, which is the subdirectory where the error handler within the Mule application `batch-contacts-csv-to-db` moves files if an error or failure occurs.
 2. Database Configuration:
    - Hostname or IP address.
@@ -24,7 +24,7 @@ As discussed in the [Overview](Overview.md) document, the Mule project `batch-co
       - JDBC driver.
       - JDBC URL.
       - JDBC driver class name.
-      - Database instance or service name. 
+      - Database instance or service name.
 
 3. Gmail Configuration:
    - Gmail username.
@@ -42,9 +42,9 @@ As discussed in the [Overview](Overview.md) document, the Mule project `batch-co
     git clone https://github.com/abelisle-mulesoft/mule-4-batch-job-examples.git
     ```
 
-2. Asuming you are working in the `dev` environment, copy the properties template `src/main/resources/properties/mule-props.template.yaml`  to `src/main/resources/properties/mule-props-dev.yaml`. 
+2. Asuming you are working in the `dev` environment, copy the properties template `src/main/resources/properties/mule-props.template.yaml`  to `src/main/resources/properties/mule-props-dev.yaml`.
 
-3. Edit the properties file `src/main/resources/properties/mule-props-dev.yaml` 
+3. Edit the properties file `src/main/resources/properties/mule-props-dev.yaml`
     - At a minimum, configure the following properties to match your environment:
         - `env.name` - the name of the environment (e.g., dev).
         - **SFTP Connector Configuration**:
@@ -62,7 +62,7 @@ As discussed in the [Overview](Overview.md) document, the Mule project `batch-co
         - **Email Connector Configuration**:
           - `gmail.server.username` - Gmail username
           - `gmail.server.password` - Gmail app password
-          - `gmail.address.from` - Email address to use as the sender, which must match the Gmail address. 
+          - `gmail.address.from` - Email address to use as the sender, which must match the Gmail address.
           - `gmail.address.to` - Recipient's email address.
     - Optionally, update the following properties to meet your requirements:
        - **Batch Job Components Configuration**.
@@ -73,5 +73,9 @@ As discussed in the [Overview](Overview.md) document, the Mule project `batch-co
           - `sftp.failed_dir` - The subdirectory within the `sftp.working_dir` where processed files are moved (e.g., `failed`).
           - `sftp.processed_dir` - The subdirectory within the `sftp.working_dir` where the error handler moves files if an error or failure occurs (e.g., `processed`).
 
-4. Compile and run the project in Anypoint Studio as a smoke test. 
+4. Compile and run the project in Anypoint Studio as a smoke test.
     - Optionally, upload the sample file [Contact_Data_100.csv](/resources/Contact_Data_100.csv) to your SFTP server within the `new` subdirectory to test and validate your configuration. As a reminder, the Mule application `batch-contacts-csv-to-db` sends a summary report via Gmail upon completion of the batch job. In other words, your configuration and settings are valid if you receive the summary email report.
+
+---
+
+Copyright © 2026 Alan Belisle. Licensed under the [Apache License 2.0](/LICENSE).

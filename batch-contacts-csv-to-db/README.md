@@ -12,3 +12,7 @@ The **documentation** folder contains:
 ## Resources
 
 The **resources** folder contains supporting files for setting up and running the Mule application, including sample contact data and the SQL script used to create the PostgreSQL contacts table. See the [resources README](resources/README.md) for additional details.
+
+---
+
+Copyright © 2026 Alan Belisle. Licensed under the [Apache License 2.0](/LICENSE).
