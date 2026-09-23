@@ -1,2 +1,2 @@
 *.raml linguist-detectable=false
-batch-contacts-csv-to-db/resources/contact-data-1m.csv.zip filter=lfs diff=lfs merge=lfs -text
+sample-data/contact-data-1m.csv.zip filter=lfs diff=lfs merge=lfs -text

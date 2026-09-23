@@ -11,7 +11,10 @@ The **documentation** folder contains:
 
 ## Resources
 
-The **resources** folder contains supporting files for setting up and running the Mule application, including sample contact data and the SQL script used to create the PostgreSQL contacts table. See the [resources README](resources/README.md) for additional details.
+## Supporting Resources
+
+- The [sample-data](../sample-data/) folder contains the shared sample contact datasets used by the examples in this repository.
+- The [database](database/) folder contains the SQL script used to create the PostgreSQL contacts table.
 
 ---
 
