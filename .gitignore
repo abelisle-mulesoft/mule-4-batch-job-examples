@@ -1,4 +1,72 @@
-**/.DS_Store
-**/*.orig
+# ======================================
+# Project: mule-4-batch-job-examples
+# ======================================
+
+# --------------------------------------
+# macOS
+# --------------------------------------
+.DS_Store
+
+# --------------------------------------
+# Anypoint Studio / Eclipse
+# --------------------------------------
+.settings/
+.project
+.classpath
+.metadata/
+.externalToolBuilders/
+*.launch
+
+# --------------------------------------
+# MuleSoft
+# --------------------------------------
+.mule/
+.studio/
+.exchange_modules_tmp/
+studio_id.xml
+*.mflow
+
+# --------------------------------------
+# Java / Maven
+# --------------------------------------
+target/
+*.class
+
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+pom.xml.next
+release.properties
+dependency-reduced-pom.xml
+buildNumber.properties
+.mvn/timing.properties
+
+# --------------------------------------
+# Environment Configuration
+# --------------------------------------
+mule-props-*.yaml
+
+# --------------------------------------
+# Certificates / Keystores
+# --------------------------------------
+*.jks
+
+# --------------------------------------
+# Editors
+# --------------------------------------
 .vscode/
+.idea/
+
+# --------------------------------------
+# Temporary / Backup / Patch Files
+# --------------------------------------
+*.orig
+*.tmp
+*.bak
+*.swp
+*~.nib
+
+# --------------------------------------
+# Repository-Private Content
+# --------------------------------------
 _private/
