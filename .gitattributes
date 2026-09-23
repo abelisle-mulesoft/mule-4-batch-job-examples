@@ -1,0 +1,1 @@
+batch-contacts-csv-to-db/resources/Contact_Data_1m.csv.zip filter=lfs diff=lfs merge=lfs -text
