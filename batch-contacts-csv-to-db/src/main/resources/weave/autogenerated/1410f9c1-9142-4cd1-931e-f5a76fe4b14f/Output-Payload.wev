@@ -1,4 +1,0 @@
-%dw 2.0
-
-type auto_1410f9c1_9142_4cd1_931e_f5a76fe4b14f_Output_Payload = Any {"header": "true"}
-
