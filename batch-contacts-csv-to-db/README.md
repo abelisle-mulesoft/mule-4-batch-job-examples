@@ -6,8 +6,8 @@ The Mule project `batch-contacts-csv-to-db` demonstrates a batch job implementat
 
 The **documentation** folder contains:
 
-- An [Overview](documentation/Overview.md) document, which provides additional details on the Mule application `batch-contacts-csv-to-db` and its implementation and is recommended as the starting point.
-- A [Getting Started](documentation/Getting-Started.md) document, which lists the prerequisites and provides details on setting up and running the Mule application `batch-contacts-csv-to-db`.
+- An [Overview](documentation/overview.md) document, which provides additional details on the Mule application `batch-contacts-csv-to-db` and its implementation and is recommended as the starting point.
+- A [Getting Started](documentation/getting-started.md) document, which lists the prerequisites and provides details on setting up and running the Mule application `batch-contacts-csv-to-db`.
 
 ## Resources
 
