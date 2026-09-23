@@ -1,10 +1,26 @@
 # Mule Project `batch-contacts-csv-to-db` Overview
 
-The Mule project `batch-contacts-csv-to-db` originated in October 2022 as a proof of concept for processing millions of records using Mule 4. The initial requirements included reading contact data from a CSV file and inserting the data into a database. The project has since evolved into a comprehensive example demonstrating how to implement a batch job in Mule 4. Rather than addressing a specific business use case, the implementation is intended to illustrate Mule batch processing capabilities.
+The Mule project `batch-contacts-csv-to-db` originated in October 2022 as a proof of concept for processing millions of records using Mule 4. The initial requirements included reading contact data from a CSV file and inserting the data into a database. The project has since evolved into a foundational example for understanding the core concepts of batch processing in Mule 4. Rather than addressing a specific business use case, the implementation is intentionally focused on illustrating Mule batch processing capabilities without introducing unnecessary integration complexity.
 
 ![Contacts CSV File to Database Introduction](assets/images/01-introduction.png)
 
 As the diagram illustrates, the Mule application monitors the `new` subdirectory on an SFTP server for new or updated files. The application expects CSV files containing contact data. When a new or updated file is detected, the application reads the contact data and bulk inserts the records into a PostgreSQL database using a Batch Job component. Upon completion of the Batch Job, the application sends a summary report via Gmail.
+
+## Design Considerations
+
+This project is intentionally focused on demonstrating the fundamental concepts of batch processing in Mule 4. Some implementation choices have therefore been kept simple or retained to illustrate additional capabilities rather than represent recommended production implementations.
+
+### Error Handling
+
+The error-handling implementation is intentionally simple. It introduces record-level failure handling within a Batch Job and demonstrates how failed records can be processed separately. A production implementation would typically require additional error classification, recovery, observability, and operational considerations.
+
+### Email Summary Report
+
+The email summary report originated as a requirement for an earlier demonstration and remains to illustrate one approach to post-processing actions after a Batch Job completes. Email reporting is not an inherent requirement of Mule batch processing and can be removed or replaced with another reporting or notification mechanism.
+
+### Record Validation
+
+The main Batch Step includes a simple email-address validation operation to demonstrate record-level validation and failure handling.
 
 ## Implementation Overview
 

@@ -1,6 +1,6 @@
 # Mule Project `batch-contacts-csv-to-db`
 
-The Mule project `batch-contacts-csv-to-db` demonstrates a batch job implementation. Rather than addressing a specific use case, it serves as a comprehensive example to showcase potential capabilities. The project utilizes the SFTP Connector to monitor a directory for new or updated files, specifically expecting CSV files containing contact data. When it detects such a file, the system reads the contact data and performs a bulk insert into a database using a Batch Job component. After the Batch Job completes, it sends a summary report via Gmail.
+The Mule project `batch-contacts-csv-to-db` provides a foundational example of batch processing in Mule 4. The implementation is intended as a starting point for understanding core Mule batch processing concepts without introducing unnecessary integration complexity. The application uses the SFTP Connector to monitor a directory for new or updated CSV files containing contact data. When a file is detected, the application reads the contact data and uses a Batch Job component to bulk insert the records into a database. Upon completion of the Batch Job, the application sends a summary report via Gmail.
 
 ## Documentation
 
