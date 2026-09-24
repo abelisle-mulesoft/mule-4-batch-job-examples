@@ -9,11 +9,9 @@ The **documentation** folder contains:
 - An [Overview](documentation/overview.md) document, which provides additional details on the Mule application `batch-contacts-csv-to-db` and its implementation and is recommended as the starting point.
 - A [Getting Started](documentation/getting-started.md) document, which lists the prerequisites and provides details on setting up and running the Mule application `batch-contacts-csv-to-db`.
 
-## Resources
-
 ## Supporting Resources
 
-- The [sample-data](../sample-data/) folder contains the shared sample contact datasets used by the examples in this repository.
+- The [sample-data](../sample-data/) folder contains fictitious contact datasets used for demonstration and testing.
 - The [database](database/) folder contains the SQL script used to create the PostgreSQL contacts table.
 
 ---
