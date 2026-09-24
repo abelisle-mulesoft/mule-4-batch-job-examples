@@ -2,38 +2,33 @@
 
 This repository contains examples that demonstrate how to implement batch processing in Mule 4.
 
-The examples provide a progression from a foundational batch processing implementation to a more advanced integration:
+- The `batch-contacts-csv-to-db` project offers a foundational example that processes contact data from CSV files and stores the records in a PostgreSQL database. This implementation emphasizes core Mule batch processing concepts and deliberately limits integration complexity.
+- The `batch-contacts-csv-to-onelake` project presents a more advanced example that processes data from CSV files and delivers the results to Microsoft OneLake. This implementation demonstrates additional integration patterns, including large-file processing, staging, failed-record handling, Microsoft Entra ID authentication, and delivery to OneLake.
 
-- `batch-contacts-csv-to-db` provides a foundational example that processes contact data from CSV files and persists the records to a PostgreSQL database. The implementation focuses on core Mule batch processing concepts while intentionally limiting integration complexity.
-- `batch-contacts-csv-to-onelake` provides a more advanced example that processes the same contact data and delivers the results to Microsoft OneLake. The implementation demonstrates additional integration patterns for large-file processing, staging, failed-record handling, Microsoft Entra ID authentication, and OneLake delivery.
-
-Both examples use the same fictitious contact datasets, allowing the implementations to be compared using a common input data model.
+Both examples use the same fictitious contact datasets for demonstration and testing purposes.
 
 ## Repository Content
 
 - **[batch-contacts-csv-to-db](batch-contacts-csv-to-db/)** — Foundational Mule Batch example using PostgreSQL as the target system.
 - **[batch-contacts-csv-to-onelake](batch-contacts-csv-to-onelake/)** — Advanced Mule Batch example using Microsoft OneLake as the target system.
-- **[sample-data](sample-data/)** — Shared fictitious contact datasets used by both examples.
+- **[sample-data](sample-data/)** — Fictitious contact datasets used for demonstration and testing.
 
 ## Technology Stack
 
-The examples were implemented and tested using:
+The examples were implemented and tested using the following technology stack:
 
-### Common
+- Common
+  - MuleSoft Anypoint Studio 7.26
+  - Mule runtime 4.12.0
 
-- MuleSoft Anypoint Studio 7.26
-- Mule runtime 4.12.0
+- Batch CSV to Database
+  - PostgreSQL 11.9
+  - PostgreSQL JDBC Driver 42.7.5
 
-### Batch CSV to Database
-
-- PostgreSQL 11.9
-- PostgreSQL JDBC Driver 42.7.5
-
-### Batch CSV to OneLake
-
-- Microsoft Fabric OneLake
-- Microsoft Entra ID
-- MuleSoft Azure Data Lake Storage Connector
+- Batch CSV to OneLake
+  - Microsoft Fabric OneLake
+  - Microsoft Entra ID
+  - MuleSoft Azure Data Lake Storage Connector 1.0.11
 
 ---
 
