@@ -15,6 +15,8 @@ Both examples use the same fictitious contact datasets for demonstration and tes
 
 ## Documentation
 
+The [Known Issues](known-issues.md) document describes known Mule runtime or tooling issues that affect the examples in this repository.
+
 Each project includes supporting documentation to help understand, configure, and run the examples.
 
 - [batch-contacts-csv-to-db/documentation](batch-contacts-csv-to-db/documentation/):

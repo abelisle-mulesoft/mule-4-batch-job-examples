@@ -16,9 +16,9 @@ sftp:
   username:       ""
   password:       ""
   working_dir:    ""
+  archive_dir:    "archive/"
   failed_dir:     "failed/"
   new_dir:        "new/"
-  processed_dir:  "processed/"
 
 #---------------------------------------------------------------------------------------------------
 # Database Connector Configuration

@@ -16,6 +16,10 @@ The `documentation` folder contains:
 - The [sample-data](../sample-data/) folder contains fictitious contact datasets used for demonstration and testing.
 - The [database](database/) folder contains the SQL script used to create the PostgreSQL contacts table.
 
+## Known Issues
+
+Refer to [Known Issues](../known-issues.md) for known Mule runtime or tooling issues that affect this example.
+
 ---
 
 Copyright © 2026 Alan Belisle. Licensed under the [Apache License 2.0](/LICENSE).

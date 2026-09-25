@@ -17,7 +17,7 @@ http://www.mulesoft.org/schema/mule/batch http://www.mulesoft.org/schema/mule/ba
 http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
 http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd">
 	<flow name="contacts-batch-process-flow" doc:id="fca2773d-e6dc-472a-bdaa-089da3c01b12" >
-		<sftp:listener doc:name="On New or Updated File" doc:id="30ea3002-65f1-454e-825e-7b22c93a505d" config-ref="SFTP_Configuration" applyPostActionWhenFailed="false" directory="${sftp.new_dir}" autoDelete="true" moveToDirectory="${sftp.processed_dir}" renameTo="#[vars.newFilename]" outputMimeType="application/csv; header=true" recursive="false">
+		<sftp:listener doc:name="On New or Updated File" doc:id="30ea3002-65f1-454e-825e-7b22c93a505d" config-ref="SFTP_Configuration" applyPostActionWhenFailed="false" directory="${sftp.new_dir}" autoDelete="true" moveToDirectory="${sftp.archive_dir}" renameTo="#[vars.newFilename]" outputMimeType="application/csv; header=true" recursive="false">
 			<scheduling-strategy >
 				<fixed-frequency/>
 			</scheduling-strategy>
@@ -110,7 +110,7 @@ VALUES (:account_id, :active_tracker_count, :assistant_name, :assistant_phone, :
 				<batch:step name="failed-records-processing-step" doc:id="bf6dcd43-b733-4430-bba0-7c87e6ce5e75" acceptPolicy="ONLY_FAILURES" >
 					<batch:aggregator doc:name="failed-records-aggregator" doc:id="ed8bce38-4287-4917-abab-b032ccdbf55f" preserveMimeTypes="true" streaming="true">
 						<logger level="TRACE" doc:name="Trace - Writing Errors to File" doc:id="7917748a-0c4b-4e92-b3e5-d825d0099541" message="Writing errors/failed records to file" />
-						<sftp:write doc:name="Error Records" doc:id="e2aeb552-2049-48e6-b092-21ed9eceb1e0" config-ref="SFTP_Configuration" createParentDirectories="false" path='#[p("sftp.processed_dir") ++ vars.errorsFilename]'>
+						<sftp:write doc:name="Error Records" doc:id="e2aeb552-2049-48e6-b092-21ed9eceb1e0" config-ref="SFTP_Configuration" createParentDirectories="false" path='#[p("sftp.archive_dir") ++ vars.errorsFilename]'>
 							<sftp:content ><![CDATA[#[output application/json --- payload]]]></sftp:content>
 						</sftp:write>
 					</batch:aggregator>
