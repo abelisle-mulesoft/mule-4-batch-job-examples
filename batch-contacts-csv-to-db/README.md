@@ -4,10 +4,10 @@ The Mule project `batch-contacts-csv-to-db` provides a foundational example of b
 
 ## Documentation
 
-The **documentation** folder contains:
+The `documentation` folder contains:
 
 - An [Overview](documentation/overview.md) document, which provides additional details on the Mule application `batch-contacts-csv-to-db` and its implementation and is recommended as the starting point.
-- A [Getting Started](documentation/getting-started.md) document, which lists the prerequisites and provides details on setting up and running the Mule application `batch-contacts-csv-to-db`.
+- A [Getting Started](documentation/getting-started.md) document, which lists the prerequisites and provides details on setting up and running the Mule application.
 
 ## Supporting Resources
 
