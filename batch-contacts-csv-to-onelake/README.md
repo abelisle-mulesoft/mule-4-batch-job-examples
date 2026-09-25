@@ -2,6 +2,8 @@
 
 The Mule project `batch-contacts-csv-to-onelake` provides an advanced example of batch processing and file integration in Mule 4. Building on the foundational concepts demonstrated by [batch-contacts-csv-to-db](/batch-contacts-csv-to-db), the implementation combines Mule batch processing with file staging, record-level failure handling, and delivery of processed data to Microsoft OneLake.
 
+This folder, `batch-contacts-csv-to-onelake`, is a complete Mule project that can be imported directly into Anypoint Studio or Anypoint Code Builder.
+
 ## Documentation
 
 The `documentation` folder contains:
