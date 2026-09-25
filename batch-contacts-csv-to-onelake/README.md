@@ -4,9 +4,11 @@ The Mule project `batch-contacts-csv-to-onelake` provides an advanced example of
 
 ## Documentation
 
-The **documentation** folder contains:
+The `documentation` folder contains:
 
 - An [Overview](documentation/overview.md) document, which provides detailed information about the application architecture and implementation and is recommended as the starting point.
+- A [Getting Started](documentation/getting-started.md) document, which lists the prerequisites and provides details on setting up and running the Mule application.
+- A [Configure Microsoft Fabric](documentation/configure-microsoft-fabric.md) document, which provides high-level instructions for configuring Microsoft Entra ID and Microsoft Fabric for use with the example.
 
 ## Supporting Resources
 
