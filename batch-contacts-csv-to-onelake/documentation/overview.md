@@ -1,10 +1,52 @@
 # Mule Project `batch-contacts-csv-to-onelake` Overview
 
-The Mule project `batch-contacts-csv-to-onelake` provides an advanced example of batch processing and file integration in Mule 4. Building on the foundational concepts demonstrated by `batch-contacts-csv-to-db`, the implementation illustrates how Mule batch processing can be combined with file staging, record-level failure handling, and cloud-based file delivery. The application uses the SFTP Connector to monitor a directory for new or updated CSV files containing contact data, processes the records using a Batch Job component, stages the successfully processed output on the SFTP server, and delivers the resulting CSV file to Microsoft OneLake.
+The Mule project `batch-contacts-csv-to-onelake` provides an advanced example of batch processing and file integration in Mule 4. The project originated as a customer demonstration designed to showcase how MuleSoft could address a more advanced file-integration scenario involving large-volume processing and delivery to Microsoft OneLake. The implementation combined and extended patterns from earlier Mule demonstrations and has since been generalized into a reusable example that builds on the foundational batch processing concepts demonstrated by `batch-contacts-csv-to-db`.
+
+The implementation illustrates how Mule batch processing can be combined with durable file staging, record-level failure handling, cloud-based file delivery, and operational visibility. The application uses the SFTP Connector to monitor a directory for new or updated CSV files containing contact data, processes the records using a Batch Job component, stages the successfully processed output on the SFTP server, and delivers the resulting CSV file to Microsoft OneLake.
 
 ![Contacts CSV File to OneLake Introduction](assets/images/overview-01-introduction.png)
 
 As the diagram illustrates, the Mule application monitors the `new` subdirectory on an SFTP server for new or updated CSV files containing contact data. When a file is detected, the application processes the records asynchronously using a Batch Job. Successfully processed records are written incrementally to a staged CSV file, while failed records are captured separately in an error file. Upon completion of the Batch Job, the application reads the completed staged file and delivers it to Microsoft OneLake using the Azure Data Lake Storage Connector. The source and staged files are archived at appropriate stages of the processing lifecycle, and structured lifecycle events provide operational visibility throughout the process.
+
+## Technical Requirements
+
+The initial customer demonstration was developed to address a comprehensive range of file-integration requirements. The following requirements most directly influenced the architecture of this example:
+
+- **Managed file transfer:** Receive batch files via SFTP and manage these files throughout the processing lifecycle.
+- **Large-volume batch processing:** Efficiently process large CSV files and handle individual record failures without terminating the entire batch job.
+- **Microsoft Fabric connectivity:** Deliver processed files to Microsoft OneLake using authentication via Microsoft Entra ID service principal.
+- **File staging and delivery:** Stage successfully processed outputs prior to delivering the completed files to OneLake.
+- **Observability:** Provide structured operational and audit logging throughout the file-processing lifecycle to support monitoring and troubleshooting.
+- **End-to-end traceability:** Leverage Mule’s correlation ID across processing stages, generated file artifacts, and operational events to enable a file-processing execution to be traced throughout its lifecycle.
+
+## Processing Lifecycle and Observability
+
+The file-processing lifecycle and its associated operational visibility are fundamental to how the application addresses the technical requirements described above. Treating processing as a series of distinct, observable stages provides the foundation for understanding the application's design decisions and, subsequently, how those decisions are reflected in the implementation.
+
+### File Lifecycle
+
+The application manages file processing as a series of distinct lifecycle stages rather than as a single operation:
+
+**Receive and initialize → Batch process and stage output → Deliver to OneLake → Archive**
+
+An inbound source file is received from the SFTP server, and the processing context is initialized. The file is then submitted for asynchronous Batch processing, during which successfully processed records are written incrementally to a staged CSV file and failed records are captured separately. After the Batch Job completes, the staged file is delivered to OneLake and subsequently archived.
+
+The source file and processed output have distinct lifecycles. Archiving the source file indicates that it was successfully accepted for Batch processing; it does not mean that every record was processed successfully or that the processed output was successfully delivered to OneLake. Batch completion, OneLake delivery, and archival therefore represent separate lifecycle milestones.
+
+### Operational Observability
+
+The application emits structured operational and audit events at significant points throughout the file-processing lifecycle. These events provide visibility into processing progress and outcomes without coupling the implementation to a specific external observability platform.
+
+Mule’s correlation ID is leveraged throughout processing and is included in structured events and generated filenames. This provides end-to-end traceability between application activity and the physical artifacts associated with a particular file-processing execution. The resulting events can be observed using Anypoint Monitoring and can also support integration with external observability platforms such as Splunk and Datadog.
+
+#### Logging Convention
+
+Logging is intentionally separated between troubleshooting information and structured operational and audit events:
+
+- **TRACE:** Identifies technical operations about to be performed, particularly operations that may fail. When a subsequent error occurs, the preceding TRACE message provides context about the operation being attempted.
+- **INFO:** Records structured operational and audit events representing meaningful milestones in the file-processing lifecycle.
+- **WARN:** Records noteworthy conditions where processing can continue, such as failed Batch records being written to the error file.
+- **ERROR:** Records processing failures handled by the flow's error-handling logic.
 
 ## Design Considerations
 
@@ -131,8 +173,6 @@ Upon completion of the Batch Job, the staged file contains the successfully proc
 
 > [!NOTE]
 > The implementation employs the SFTP server both as the inbound file source and as a durable staging and archival storage solution.
->
-> Processing of the inbound source file, asynchronous Batch processing, OneLake delivery, and archival are managed as distinct stages of the file lifecycle. Each lifecycle milestone is logged independently, and the corresponding file artifacts are retained as required.
 
 ##### Batch Job Configuration
 
