@@ -13,6 +13,19 @@ Both examples use the same fictitious contact datasets for demonstration and tes
 - **[batch-contacts-csv-to-onelake](batch-contacts-csv-to-onelake/)** — Advanced Mule Batch example using Microsoft OneLake as the target system.
 - **[sample-data](sample-data/)** — Fictitious contact datasets used for demonstration and testing.
 
+## Documentation
+
+Each project includes supporting documentation to help understand, configure, and run the examples.
+
+- [batch-contacts-csv-to-db/documentation](batch-contacts-csv-to-db/documentation/):
+  - [Overview](batch-contacts-csv-to-db/documentation/overview.md) — Architecture, design considerations, and implementation details.
+  - [Getting Started](batch-contacts-csv-to-db/documentation/getting-started.md) — Configuration and instructions for running the example.
+
+- [batch-contacts-csv-to-onelake/documentation](batch-contacts-csv-to-onelake/documentation/):
+  - [Overview](batch-contacts-csv-to-onelake/documentation/overview.md) — Architecture, design considerations, and implementation details.
+  - [Getting Started](batch-contacts-csv-to-onelake/documentation/getting-started.md) — Configuration and instructions for running the example.
+  - [Configure Microsoft Fabric](batch-contacts-csv-to-onelake/documentation/configure-microsoft-fabric.md) — Microsoft Entra ID and Fabric configuration required by the example.
+
 ## Technology Stack
 
 The examples were implemented and tested using the following technology stack:
