@@ -52,6 +52,9 @@ Logging is intentionally separated between troubleshooting information and struc
 
 This project demonstrates a more advanced batch processing and file integration implementation in Mule 4. Some implementation choices have been intentionally simplified to illustrate specific Mule batch processing and integration capabilities rather than represent a complete production implementation.
 
+> [!NOTE]
+> The logging, observability, and error-handling methods demonstrated in this example serve to illustrate the essential concepts for implementation. In production environments, more comprehensive strategies are typically employed, often utilizing established organizational patterns or reusable frameworks to address logging, observability, error handling, and related operational requirements.
+
 ### Error Handling
 
 The error-handling implementation is intentionally simple and addresses failures differently depending on where they occur in the processing lifecycle.
