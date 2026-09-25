@@ -1,17 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<mule xmlns:http="http://www.mulesoft.org/schema/mule/http"
-	xmlns:sftp="http://www.mulesoft.org/schema/mule/sftp"
-	xmlns:email="http://www.mulesoft.org/schema/mule/email" xmlns:validation="http://www.mulesoft.org/schema/mule/validation"
+<mule xmlns:sftp="http://www.mulesoft.org/schema/mule/sftp"
+	xmlns:email="http://www.mulesoft.org/schema/mule/email"
+	xmlns:validation="http://www.mulesoft.org/schema/mule/validation"
 	xmlns:db="http://www.mulesoft.org/schema/mule/db"
-	xmlns:batch="http://www.mulesoft.org/schema/mule/batch" xmlns:file="http://www.mulesoft.org/schema/mule/file" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="
-http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd 
-http://www.mulesoft.org/schema/mule/email http://www.mulesoft.org/schema/mule/email/current/mule-email.xsd http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
-http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
-http://www.mulesoft.org/schema/mule/file http://www.mulesoft.org/schema/mule/file/current/mule-file.xsd
-http://www.mulesoft.org/schema/mule/batch http://www.mulesoft.org/schema/mule/batch/current/mule-batch.xsd
-http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd
+	xmlns:batch="http://www.mulesoft.org/schema/mule/batch"
+	xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="
+http://www.mulesoft.org/schema/mule/sftp http://www.mulesoft.org/schema/mule/sftp/current/mule-sftp.xsd
+http://www.mulesoft.org/schema/mule/email http://www.mulesoft.org/schema/mule/email/current/mule-email.xsd
 http://www.mulesoft.org/schema/mule/validation http://www.mulesoft.org/schema/mule/validation/current/mule-validation.xsd
-http://www.mulesoft.org/schema/mule/sftp http://www.mulesoft.org/schema/mule/sftp/current/mule-sftp.xsd">
+http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd
+http://www.mulesoft.org/schema/mule/batch http://www.mulesoft.org/schema/mule/batch/current/mule-batch.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
+http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd">
 	<flow name="contacts-batch-process-flow" doc:id="fca2773d-e6dc-472a-bdaa-089da3c01b12" >
 		<sftp:listener doc:name="On New or Updated File" doc:id="30ea3002-65f1-454e-825e-7b22c93a505d" config-ref="SFTP_Configuration" applyPostActionWhenFailed="false" directory="${sftp.new_dir}" autoDelete="true" moveToDirectory="${sftp.processed_dir}" renameTo="#[vars.newFilename]" outputMimeType="application/csv; header=true" recursive="false">
 			<scheduling-strategy >
@@ -31,10 +35,10 @@ payload as Iterator]]></ee:set-payload>
 			</ee:message>
 		</ee:transform>
 		<logger level="TRACE" doc:name="Trace - Staging Batch Job" doc:id="62f88264-e34a-4cfc-971c-66ff286b8e48" message="Staging Batch Job" />
-		<batch:job jobName="file-processing-job" doc:id="5f305767-0e1f-4eb4-9dd5-a085a7fe704f" maxFailedRecords="-1" blockSize="${batch.job.block_size}">
+		<batch:job jobName="file-processing-job" doc:id="5f305767-0e1f-4eb4-9dd5-a085a7fe704f" maxFailedRecords="-1" blockSize='${batch.job.block_size}'>
 			<batch:process-records >
 				<batch:step name="main-processing-step" doc:id="4b0247b5-3ae7-4d8a-82e4-f323c3011eb8" >
-					<batch:aggregator doc:name="main-records-aggregator" doc:id="49515385-4c84-48c1-b078-adf0532b2685" size="${batch.aggregator.main.size}" preserveMimeTypes="true" >
+					<batch:aggregator doc:name="main-records-aggregator" doc:id="49515385-4c84-48c1-b078-adf0532b2685" size="1000" preserveMimeTypes="true" >
 						<ee:transform doc:name="CSV to SQL" doc:id="d458f945-6ae4-4694-b7c5-7a0ffc42dc1a">
 						<ee:message>
 							<ee:set-payload><![CDATA[%dw 2.0
@@ -117,7 +121,7 @@ output application/json
 ---
 {
 	Error: Batch::getFirstException().message,
-	Record: write(payload, "application/csv", {"header":false, "lineSeparator":""})	
+	Record: write(payload, "application/csv", {"header":false, "lineSeparator":""})
 }
 
 ]]></ee:set-payload>

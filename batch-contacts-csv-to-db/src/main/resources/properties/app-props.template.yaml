@@ -3,23 +3,10 @@
 #===================================================================================================
 
 #---------------------------------------------------------------------------------------------------
-# HTTP Listener on CloudHub
-http_listener:  # Comnmon to HTTP and HTTPS
-  host: "0.0.0.0"
-
-http:
-  port: "8081"
-https:
-  port: "8082"
-
-#---------------------------------------------------------------------------------------------------
 # Batch Job Components Configuration
 batch:
   job:
     block_size:   "10000"
-  aggregator:
-    main:
-      size:       "1000"
 
 #---------------------------------------------------------------------------------------------------
 # SFTP Connector Configuration
@@ -29,9 +16,9 @@ sftp:
   username:       ""
   password:       ""
   working_dir:    ""
+  failed_dir:     "failed/"
   new_dir:        "new/"
   processed_dir:  "processed/"
-  failed_dir:     "failed/"
 
 #---------------------------------------------------------------------------------------------------
 # Database Connector Configuration
@@ -46,7 +33,7 @@ postgres_db:
 
 #---------------------------------------------------------------------------------------------------
 # Email Connector Configuration
-# Settings for Gmail using Application Password - as per https://support.google.com/accounts/answer/185833
+# Settings for GMail using Application Password - as per https://support.google.com/accounts/answer/185833
 gmail:
   server:
     host:         "smtp.gmail.com"
