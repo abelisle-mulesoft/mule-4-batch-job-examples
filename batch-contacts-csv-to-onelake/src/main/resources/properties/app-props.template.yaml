@@ -7,9 +7,6 @@
 batch:
   job:
     block_size:   "10000"
-  aggregator:
-    main:
-      size:       "100"
 
 #---------------------------------------------------------------------------------------------------
 # SFTP Connector Configuration
